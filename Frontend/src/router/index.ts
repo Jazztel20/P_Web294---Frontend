@@ -8,16 +8,21 @@ const router = createRouter({
       name: 'home',
       component: () => import('../views/home.vue'),
     },
-    // {
-    //   path: '/login',
-    //   name: 'login',
-    //   component: () => import('../views/LoginView.vue'),
-    // },
-    // {
-    //   path: '/register',
-    //   name: 'register',
-    //   component: () => import('../views/RegisterView.vue'),
-    // },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+    },
+     {
+       path: '/register',
+       name: 'register',
+       component: () => import('../views/RegisterView.vue'),
+     },
+          {
+       path: '/books',
+       name: 'books',
+       component: () => import('../views/BooksView.vue'),
+     }
   ],
 })
 

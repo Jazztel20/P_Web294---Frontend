@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+
+</script>
 
 <template>
   <header class="top-bar">
@@ -9,23 +11,27 @@
 
     <nav class="main-nav">
       <ul>
-        <li><a href="#">Accueil</a></li>
-        <li><a href="#">Livres</a></li>
+        <li><router-link :to="{ name: 'home' }">Accueil</router-link></li>
+        <li><router-link :to="{ name: 'books' }">Livres</router-link></li>
       </ul>
     </nav>
 
     <div class="auth-buttons">
-      <!-- À remplacer plus tard par <router-link> -->
-      <span class="auth-link">S’enregistrer</span>
-      <button class="auth-button">Connexion</button>
+      <router-link :to="{ name: 'register' }" class="auth-link">
+        S’enregistrer
+      </router-link>
+
+      <router-link :to="{ name: 'login' }" class="auth-button">
+        Connexion
+      </router-link>
     </div>
   </header>
 </template>
 
 <style scoped>
-
 header {
   background-color: #4ac0ff;
+  padding: 30px 20px;
 }
 .top-bar {
   display: flex;
