@@ -4,10 +4,10 @@ import Footer from '@/components/partials/Footer.vue'
 </script>
 
 <template>
+  <Header />
   <div class="page-body">
     <div class="page-wrapper">
       <!-- HEADER -->
-      <Header />
 
       <!-- INTRO -->
       <section class="intro">
@@ -24,28 +24,12 @@ import Footer from '@/components/partials/Footer.vue'
 
       <!-- LIVRES -->
       <section class="books-section">
-        <!-- COVERS -->
-        <div class="book-covers">
-          <figure class="book-cover">
-            <img src="@/assets/nicolas_sarkozy.jpg" alt="Kid Paddle" />
-          </figure>
-          <figure class="book-cover">
-            <img src="@/assets/nicolas_sarkozy.jpg" alt="Sarko 5 ans" />
-          </figure>
-          <figure class="book-cover">
-            <img src="@/assets/nicolas_sarkozy.jpg" alt="Kama sutra" />
-          </figure>
-          <figure class="book-cover">
-            <img src="@/assets/nicolas_sarkozy.jpg" alt="Événement" />
-          </figure>
-          <figure class="book-cover">
-            <img src="@/assets/nicolas_sarkozy.jpg" alt="C# pour les nuls" />
-          </figure>
-        </div>
-
         <!-- CARTES D’ÉVALUATION -->
         <div class="book-cards">
           <div class="book-card">
+            <figure class="book-cover">
+              <img src="@/assets/nicolas_sarkozy.jpg" alt="Kid Paddle" />
+            </figure>
             <div class="book-title">Kid Paddle</div>
             <div class="stars">★★★★★</div>
             <button class="evaluation-btn">Voir l’évaluation</button>
@@ -53,6 +37,9 @@ import Footer from '@/components/partials/Footer.vue'
           </div>
 
           <div class="book-card">
+            <figure class="book-cover">
+              <img src="@/assets/nicolas_sarkozy.jpg" alt="Kid Paddle" />
+            </figure>
             <div class="book-title">Sarko 5 ans</div>
             <div class="stars">★★★★★</div>
             <button class="evaluation-btn">Voir l’évaluation</button>
@@ -60,6 +47,9 @@ import Footer from '@/components/partials/Footer.vue'
           </div>
 
           <div class="book-card">
+            <figure class="book-cover">
+              <img src="@/assets/nicolas_sarkozy.jpg" alt="Kid Paddle" />
+            </figure>
             <div class="book-title">Pour Maël</div>
             <div class="stars">★★★★★</div>
             <button class="evaluation-btn">Voir l’évaluation</button>
@@ -67,13 +57,19 @@ import Footer from '@/components/partials/Footer.vue'
           </div>
 
           <div class="book-card">
-            <div class="book-title">Frappe atomi</div>
+            <figure class="book-cover">
+              <img src="@/assets/nicolas_sarkozy.jpg" alt="Kid Paddle" />
+            </figure>
+            <div class="book-title">Frappe atomique</div>
             <div class="stars">★★★★★</div>
             <button class="evaluation-btn">Voir l’évaluation</button>
             <button class="play-btn">▶</button>
           </div>
 
           <div class="book-card">
+            <figure class="book-cover">
+              <img src="@/assets/nicolas_sarkozy.jpg" alt="Kid Paddle" />
+            </figure>
             <div class="book-title">Pour l’ETML</div>
             <div class="stars">★★★★★</div>
             <button class="evaluation-btn">Voir l’évaluation</button>
@@ -98,21 +94,10 @@ import Footer from '@/components/partials/Footer.vue'
 
 .page-body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #b8e5f7;
+  background: #ffffff;
   display: flex;
   justify-content: center;
   padding: 20px;
-}
-
-.page-wrapper {
-  background: #ffffff;
-  width: 100%;
-  border-radius: 12px;
-  padding: 20px 30px 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  margin: 20px auto;
-  display: flex;
-  flex-direction: column;
 }
 
 /* INTRO */
@@ -143,7 +128,7 @@ import Footer from '@/components/partials/Footer.vue'
   height: 230px;
   object-fit: cover;
   border-radius: 4px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .book-cards {
@@ -161,7 +146,7 @@ import Footer from '@/components/partials/Footer.vue'
   border: 2px solid #5cb5ff;
   padding: 10px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .book-title {
