@@ -4,7 +4,7 @@
   <header class="top-bar">
     <div class="logo">
       <div class="logo-icon">📚</div>
-      <div class="logo-text">Passion</div>
+      <div class="logo-text">Lecture Passion</div>
     </div>
 
     <nav class="main-nav">
@@ -23,6 +23,10 @@
 </template>
 
 <style scoped>
+
+header {
+  background-color: #4ac0ff;
+}
 .top-bar {
   display: flex;
   align-items: center;

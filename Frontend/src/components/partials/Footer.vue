@@ -26,16 +26,20 @@
 
 <style scoped="">
 footer {
-  margin-top: 25px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #4ac0ff;
   border-top: 2px solid #0172c5;
-  padding-top: 100px;
+  padding: 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   font-size: 12px;
-  position: fixed;
-  bottom: 0;
+  z-index: 999;
 }
+
  
 .footer-column {
   min-width: 150px;
