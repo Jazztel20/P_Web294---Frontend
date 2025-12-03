@@ -1,18 +1,17 @@
 <template>
   <div class="login-container">
-    <header-component /> <!-- Ton header -->
-    
+    <header-component />
+    <!-- Ton header -->
+
     <main class="login-content">
       <div class="login-card">
         <h2 class="login-title">Connexion</h2>
-        <SimpleTextForm 
-          :fields="fields"
-          @submit="handleSubmit"
-        />
+        <SimpleTextForm :fields="fields" @submit="handleSubmit" />
       </div>
     </main>
 
-    <footer-component /> <!-- Ton footer -->
+    <footer-component />
+    <!-- Ton footer -->
   </div>
 </template>
 
@@ -25,17 +24,17 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const fields = [
-  { 
+  {
     name: 'username',
     label: "Nom d'utilisateur",
-    type: 'text',
-    placeholder: "Entrez votre nom d'utilisateur"
+    type: 'input',
+    placeholder: "Entrez votre nom d'utilisateur",
   },
-  { 
+  {
     name: 'password',
     label: 'Mot de passe',
     type: 'password',
-    placeholder: 'Entrez votre mot de passe'
+    placeholder: 'Entrez votre mot de passe',
   },
 ]
 
@@ -48,18 +47,25 @@ async function handleSubmit(data) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-
-    if (!res.ok) throw new Error('Identifiants incorrects')
-
+    // Parser la réponse AVANT d’utiliser result
     const result = await res.json()
-    localStorage.setItem('authToken', JSON.stringify(result.token))
+
+    if (!res.ok) {
+      const message = result.messages?.join('\n') || result.message || 'Erreur inconnue'
+      throw new Error(message)
+    }
+
+    // Stockage token / user
+    localStorage.setItem('authToken', result.token)
     localStorage.setItem('currentUser', JSON.stringify(result))
 
     router.push('/')
   } catch (err) {
-    alert(err.message)
+    console.error('Erreur login complète :', err)
+    alert(`Erreur : ${err.message}\nType : ${err.name}`)
   }
 }
+
 </script>
 
 <style scoped>
@@ -85,7 +91,7 @@ async function handleSubmit(data) {
   padding: 36px 40px;
   border-radius: 18px;
   border: 1px solid #d8e9ff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   animation: fadeUp 0.4s ease-out;
 }
 
@@ -98,7 +104,13 @@ async function handleSubmit(data) {
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(15px);}
-  to { opacity: 1; transform: translateY(0);}
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
