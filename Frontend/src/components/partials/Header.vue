@@ -1,5 +1,9 @@
 <script setup>
-
+import { reactive } from 'vue'   
+const auth = reactive({
+  user: JSON.parse(localStorage.getItem('currentUser') || 'null')
+})
+const test = false
 </script>
 
 <template>
@@ -15,8 +19,13 @@
         <li><router-link :to="{ name: 'books' }">Livres</router-link></li>
       </ul>
     </nav>
-
-    <div class="auth-buttons">
+    
+    <div v-if='test' class="auth-buttons">
+        <!-- <router-link :to="{ name: 'logout' }" class="auth-button">
+        Déconnecter
+      </router-link> -->
+    </div>
+    <div v-else class="auth-buttons">
       <router-link :to="{ name: 'register' }" class="auth-link">
         S’enregistrer
       </router-link>
