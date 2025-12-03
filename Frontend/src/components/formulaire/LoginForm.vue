@@ -9,7 +9,6 @@
 
       <!-- input texte / password / email etc. -->
       <input
-        v-if="field.type !== 'textarea'"
         :type="field.type || 'text'"
         :id="field.name"
         v-model="formData[field.name]"
@@ -19,7 +18,7 @@
     </div>
 
     <button type="submit" class="btn-submit">
-      Se connecter
+      S'enregistrer
     </button>
   </form>
 </template>

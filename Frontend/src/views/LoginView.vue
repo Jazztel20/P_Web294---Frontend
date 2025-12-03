@@ -1,72 +1,61 @@
 <template>
   <div class="login-container">
-    <header-component />
-    <!-- Ton header -->
-
+    
     <main class="login-content">
       <div class="login-card">
         <h2 class="login-title">Connexion</h2>
-        <SimpleTextForm :fields="fields" @submit="handleSubmit" />
+        <SimpleTextForm 
+          :fields="fields"
+          @submit="handleSubmit"
+        />
       </div>
     </main>
-
-    <footer-component />
-    <!-- Ton footer -->
   </div>
 </template>
 
 <script setup>
-import SimpleTextForm from '@/components/formulaire/Forms.vue'
-import HeaderComponent from '@/components/partials/Header.vue'
-import FooterComponent from '@/components/partials/Footer.vue'
+import SimpleTextForm from '@/components/formulaire/LoginForm.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
 const fields = [
-  {
+  { 
     name: 'username',
     label: "Nom d'utilisateur",
-    type: 'input',
+    type: 'text',
     placeholder: "Entrez votre nom d'utilisateur"
   },
-  {
+  { 
     name: 'password',
     label: 'Mot de passe',
-    type: 'input',
+    type: 'password',
     placeholder: 'Entrez votre mot de passe'
   },
+  
 ]
 
 const LOGIN_URL = 'http://localhost:3333/user/login'
 
 async function handleSubmit(data) {
-  console.log('DATA RECUE DU FORMULAIRE:', data)
   try {
     const res = await fetch(LOGIN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-    // Parser la réponse AVANT d’utiliser result
+
+    if (!res.ok) throw new Error('Identifiants incorrects')
+
     const result = await res.json()
-
-    if (!res.ok) {
-      const message = result.messages?.join('\n') || result.message || 'Erreur inconnue'
-      throw new Error(message)
-    }
-
-    // Stockage token / user
-    localStorage.setItem('authToken', result.token)
+    localStorage.setItem('authToken', JSON.stringify(result.token))
     localStorage.setItem('currentUser', JSON.stringify(result))
 
     router.push('/')
   } catch (err) {
-    console.error('Erreur login complète :', err)
-    alert(`Erreur : ${err.message}\nType : ${err.name}`)
+    alert(err.message)
   }
 }
-
 </script>
 
 <style scoped>
@@ -92,7 +81,7 @@ async function handleSubmit(data) {
   padding: 36px 40px;
   border-radius: 18px;
   border: 1px solid #d8e9ff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   animation: fadeUp 0.4s ease-out;
 }
 
@@ -105,13 +94,7 @@ async function handleSubmit(data) {
 }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(15px);}
+  to { opacity: 1; transform: translateY(0);}
 }
 </style>
