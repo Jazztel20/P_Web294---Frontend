@@ -28,19 +28,20 @@ const fields = [
     name: 'username',
     label: "Nom d'utilisateur",
     type: 'input',
-    placeholder: "Entrez votre nom d'utilisateur",
+    placeholder: "Entrez votre nom d'utilisateur"
   },
   {
     name: 'password',
     label: 'Mot de passe',
-    type: 'password',
-    placeholder: 'Entrez votre mot de passe',
+    type: 'input',
+    placeholder: 'Entrez votre mot de passe'
   },
 ]
 
 const LOGIN_URL = 'http://localhost:3333/user/login'
 
 async function handleSubmit(data) {
+  console.log('DATA RECUE DU FORMULAIRE:', data)
   try {
     const res = await fetch(LOGIN_URL, {
       method: 'POST',
