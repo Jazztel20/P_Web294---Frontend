@@ -4,7 +4,6 @@ import Footer from '@/components/partials/Footer.vue'
 </script>
 
 <template>
-  <Header />
   <div class="page-body">
     <div class="page-wrapper">
       <!-- HEADER -->
@@ -79,7 +78,6 @@ import Footer from '@/components/partials/Footer.vue'
       </section>
 
       <!-- FOOTER -->
-      <Footer />
     </div>
   </div>
 </template>
