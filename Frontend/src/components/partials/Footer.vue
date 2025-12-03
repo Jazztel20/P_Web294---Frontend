@@ -30,11 +30,11 @@ footer {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #4ac0ff;
+  background: #8ad6ff;
   border-top: 2px solid #0172c5;
-  padding: 20px 40px;
+  padding: 20px 0px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: flex-start;
   font-size: 12px;
   z-index: 999;

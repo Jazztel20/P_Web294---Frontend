@@ -30,7 +30,7 @@
 
 <style scoped>
 header {
-  background-color: #4ac0ff;
+  background-color: #8ad6ff;
   padding: 30px 20px;
 }
 .top-bar {
@@ -69,7 +69,7 @@ header {
 .main-nav ul {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 25px;
   padding: 0;
   margin: 0;
 }
@@ -78,13 +78,15 @@ header {
   text-decoration: none;
   color: #0172c5;
   font-weight: 500;
+  font-size: x-large;
   padding: 5px 10px;
-  border-radius: 6px;
+  border-radius: 14px;
   transition: background 0.3s;
 }
 
 .main-nav a:hover {
-  background-color: #e9f4ff;
+  background-color: #ffffff;
+  box-shadow: inset 0 0 0 1px #0172c5; /* Creates the inner border */
 }
 
 /* Auth Buttons */

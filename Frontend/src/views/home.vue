@@ -1,14 +1,10 @@
 <script setup>
-import Header from '@/components/partials/Header.vue'
-import Footer from '@/components/partials/Footer.vue'
+
 </script>
 
 <template>
   <div class="page-body">
     <div class="page-wrapper">
-      <!-- HEADER -->
-
-      <!-- INTRO -->
       <section class="intro">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel iaculis nisl.
@@ -76,14 +72,11 @@ import Footer from '@/components/partials/Footer.vue'
           </div>
         </div>
       </section>
-
-      <!-- FOOTER -->
     </div>
   </div>
 </template>
 
 <style scoped>
-/* RESET */
 * {
   box-sizing: border-box;
   margin: 0;
