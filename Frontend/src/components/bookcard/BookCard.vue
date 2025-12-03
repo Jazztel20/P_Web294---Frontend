@@ -1,47 +1,120 @@
 <script setup>
 defineProps({
-  id: Number,
-  title: String,
-  rating: Number,
-  image: String,
-
-  // Optional slots / flags
+  book: {
+    type: Object,
+    required: true,
+  },
   showActions: {
     type: Boolean,
-    default: false,
+    default: false, // ✅ buttons hidden by default
   },
 })
 </script>
 
 <template>
   <div class="book-card">
-    <!-- OPTIONAL action buttons -->
+    <!-- ✅ Optional Action buttons -->
     <div v-if="showActions" class="card-actions">
-      <router-link :to="`/books/${id}/editbook`" title="Modifier" class="action-btn">
+      <router-link :to="`/books/${book.id}/editbook`" title="Modifier" class="action-btn">
         ⚙️
       </router-link>
 
-      <router-link :to="`/books/${id}/deletebook`" title="Supprimer" class="action-btn delete">
+      <router-link :to="`/books/${book.id}/deletebook`" title="Supprimer" class="action-btn delete">
         🗑️
       </router-link>
     </div>
 
     <!-- Image -->
-    <img :src="image" alt="Couverture" />
+    <img :src="book.image" alt="Couverture" />
 
     <!-- Title -->
-    <h2>{{ title }}</h2>
+    <h2>{{ book.title }}</h2>
 
     <!-- Stars -->
     <div class="stars">
-      <span v-for="n in rating" :key="n">★</span>
+      <span v-for="n in book.rating" :key="n">★</span>
     </div>
 
-    <!-- View button -->
-    <router-link :to="`/books/${id}`" class="view-btn"> Voir l'évaluation ➜ </router-link>
+    <!-- Button -->
+    <router-link :to="`/books/${book.id}`" class="view-btn"> Voir l'évaluation ➜ </router-link>
   </div>
 </template>
 
 <style scoped>
-/* You can move the card styles from CatalogueView here */
+.book-card {
+  background: white;
+  width: 230px;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: 0.2s;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action-btn {
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+  opacity: 0.85;
+}
+
+.action-btn:hover {
+  transform: scale(1.25);
+  opacity: 1;
+}
+
+.book-card img {
+  width: 170px;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+}
+
+.book-card h2 {
+  font-size: 16px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.stars {
+  color: #2563eb;
+  margin-bottom: 12px;
+}
+
+.view-btn {
+  margin-top: auto;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  padding: 8px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.view-btn:hover {
+  background: #e0e7ff;
+}
 </style>
