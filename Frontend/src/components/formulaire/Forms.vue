@@ -7,17 +7,20 @@
     >
       <label :for="field.name">{{ field.label }}</label>
 
-      <!-- input texte -->
+      <!-- input texte / password / email etc. -->
       <input
         v-if="field.type !== 'textarea'"
-        type="text"
+        :type="field.type || 'text'"
         :id="field.name"
         v-model="formData[field.name]"
         :placeholder="field.placeholder || ''"
+        class="form-input"
       />
     </div>
 
-    <button type="submit">Envoyer</button>
+    <button type="submit" class="btn-submit">
+      Se connecter
+    </button>
   </form>
 </template>
 
@@ -47,19 +50,48 @@ function onSubmit() {
 
 <style scoped>
 .form-group {
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
 
-input, textarea {
+.form-input {
   width: 100%;
-  padding: 7px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 12px;
+  border: 1px solid #bcd4f5;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: .2s;
+}
+
+.form-input:focus {
+  border-color: #0097ff;
+  box-shadow: 0 0 6px rgba(0,151,255,0.4);
 }
 
 label {
   display: block;
-  margin-bottom: 4px;
-  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  font-weight: 600;
 }
+
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  background: #12a5ff;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: .15s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+}
+
+.btn-submit:hover {
+  background: #0c8ad4;
+  transform: translateY(-1px);
+}
+
 </style>
