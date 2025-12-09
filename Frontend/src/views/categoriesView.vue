@@ -1,12 +1,24 @@
 <script setup>
+// -------------------------------------------
+// Imports
+// -------------------------------------------
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import BookCard from '@/components/bookcard/BookCard.vue'
+
+// Router instance (for navigation)
 const router = useRouter()
 
+// -------------------------------------------
+// Navigate to a category page
+// -------------------------------------------
 function goToCategory(cat) {
   router.push(`/categories/${cat.id}/books`)
 }
 
+// -------------------------------------------
+// Category list (static demo data)
+// -------------------------------------------
 const categories = [
   { id: 1, name: 'Fiction' },
   { id: 2, name: 'Biographies' },
@@ -26,29 +38,29 @@ const categories = [
   { id: 16, name: 'Religion' },
 ]
 
+// Current category (you can update this dynamically later)
 const selectedCategory = ref('Fiction')
 
-// Temporary static books
+// -------------------------------------------
+// Books list formatted for <BookCard>
+// -------------------------------------------
 const books = [
-  { title: "L'Étranger", cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★★' },
-  { title: 'The Communist Manifesto', cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★★' },
-  { title: 'Fidel Castro: My Life', cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★☆' },
-  { title: 'Operation Gladio', cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★★' },
-  { title: 'Astérion et le Minotaure', cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★☆' },
-  { title: 'kid paddle', cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★★' },
+  { id: 1, title: "L'Étranger", image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
+  { id: 2, title: 'The Communist Manifesto', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
+  { id: 3, title: 'Fidel Castro: My Life', image: '/covers/nicolas_sarkozy.jpg', rating: 4 },
+  { id: 4, title: 'Operation Gladio', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
+  { id: 5, title: 'Astérion et le Minotaure', image: '/covers/nicolas_sarkozy.jpg', rating: 4 },
+  { id: 6, title: 'Kid Paddle', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
+  { id: 7, title: 'Sartre — pétition 23/01/77', image: '/covers/nicolas_sarkozy.jpg', rating: 4 },
+  { id: 8, title: 'The Prince', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
   {
-    title: 'sartre et la pétition 23/01/77 Le Monde.',
-    cover: '/covers/nicolas_sarkozy.jpg',
-    stars: '★★★★☆',
+    id: 9,
+    title: 'Maoism & Life Expectancy in China',
+    image: '/covers/nicolas_sarkozy.jpg',
+    rating: 5,
   },
-  { title: 'The Prince', cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★★' },
-  {
-    title: 'maoism and life expectenca in china',
-    cover: '/covers/nicolas_sarkozy.jpg',
-    stars: '★★★★★',
-  },
-  { title: 'Capital Vol. 1', cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★★' },
-  { title: 'The Art of War', cover: '/covers/nicolas_sarkozy.jpg', stars: '★★★★☆' },
+  { id: 10, title: 'Capital Vol. 1', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
+  { id: 11, title: 'The Art of War', image: '/covers/nicolas_sarkozy.jpg', rating: 4 },
 ]
 </script>
 
@@ -56,9 +68,12 @@ const books = [
   <div class="page-body">
     <div class="page-wrapper">
       <div class="layout">
-        <!-- LEFT CATEGORY COLUMN -->
+        <!-- ---------------------------------------
+             LEFT CATEGORY COLUMN
+        ---------------------------------------- -->
         <aside class="category-column">
           <h2>Catégories</h2>
+
           <div class="category-list">
             <div
               class="category-item"
@@ -71,20 +86,14 @@ const books = [
           </div>
         </aside>
 
-        <!-- BOOKS SECTION -->
+        <!-- ---------------------------------------
+             BOOKS SECTION
+        ---------------------------------------- -->
         <section class="books-section">
           <h2>{{ selectedCategory }}</h2>
 
           <div class="book-cards">
-            <div class="book-card" v-for="(book, i) in books" :key="i">
-              <figure class="book-cover">
-                <img :src="book.cover" :alt="book.title" />
-              </figure>
-              <div class="book-title">{{ book.title }}</div>
-              <div class="stars">{{ book.stars }}</div>
-              <button class="evaluation-btn">Voir l’évaluation</button>
-              <button class="play-btn">▶</button>
-            </div>
+            <BookCard v-for="book in books" :key="book.id" :book="book" :showActions="false" />
           </div>
         </section>
       </div>
@@ -93,19 +102,19 @@ const books = [
 </template>
 
 <style scoped>
-/* RESET */
+/* GLOBAL RESET */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* PAGE WRAPPER */
 .page-body {
   background-color: #f5f5f5;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
   padding: 20px 0;
 }
 
@@ -114,13 +123,13 @@ const books = [
   max-width: 1300px;
 }
 
-/* LAYOUT */
+/* MAIN LAYOUT */
 .layout {
   display: flex;
   gap: 20px;
 }
 
-/* LEFT CATEGORY COLUMN */
+/* LEFT COLUMN */
 .category-column {
   width: 250px;
   background: #ffffff;
@@ -159,77 +168,26 @@ const books = [
   background: #ccc;
 }
 
-.category-item.active {
-  background: #0172c5;
-  color: #fff;
-}
-
 /* BOOKS SECTION */
 .books-section {
   flex: 1;
   background: #ffffff;
-  padding: 20px;
+  padding: 25px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .books-section h2 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   border-bottom: 3px solid #0172c5;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
 }
 
+/* CARD GRID */
 .book-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
-}
-
-.book-card {
-  background: #ffffff;
-  border-radius: 10px;
-  border: 2px solid #5cb5ff;
-  padding: 10px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-}
-
-.book-cover img {
-  width: 160px;
-  height: 230px;
-  object-fit: cover;
-  border-radius: 4px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.book-title {
-  font-weight: 600;
-  margin: 8px 0;
-}
-
-.stars {
-  color: #0098ff;
-  margin-bottom: 8px;
-}
-
-.evaluation-btn {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 2px solid #0172c5;
-  background: #e9f4ff;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.play-btn {
-  margin-top: 10px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none;
-  background: #007fd6;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
+  gap: 30px; /* more spacing between cards */
+  padding-top: 10px;
 }
 </style>
