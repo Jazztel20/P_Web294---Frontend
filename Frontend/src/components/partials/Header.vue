@@ -1,42 +1,31 @@
 
 <script setup>
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { auth } from '@/stores/auth'
 
-const router = useRouter()
-
-const auth = reactive({
-  user: JSON.parse(localStorage.getItem('currentUser') || 'null')
-})
 
 const LOGOUT_URL = 'http://localhost:3333/user/logout'
 
 async function handleLogout() {
   try {
     const token = localStorage.getItem('authToken')
-    console.log(token)
-    console.log(localStorage.getItem("authToken"))
 
-    const res = await fetch(LOGOUT_URL, {
+    await fetch(LOGOUT_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,     
+        'Authorization': `Bearer ${token}`,
       },
     })
-
-    if (!res.ok) throw new Error('Impossible de se déconnecter')
-
-    localStorage.removeItem('authToken')
-    localStorage.removeItem('currentUser')
-    auth.user = null
-
-    // Redirection
-    router.push('/')
   } catch (err) {
-    alert(err.message)
+    console.error(err)
+  } finally {
+    auth.logout()          // 👈 met à jour le store + localStorage
+    router.push('/')
   }
 }
+
+
+
 </script>
 
 <template>
@@ -54,7 +43,7 @@ async function handleLogout() {
     </nav>
     
     <div v-if='auth.user' class="auth-buttons">
-      <button @click="handleLogout">Se deconnecter</button>
+      <button @click="handleLogout">Se déconnecter</button>
     </div>
     <div v-else class="auth-buttons">
       <router-link :to="{ name: 'register' }" class="auth-link">
