@@ -18,7 +18,7 @@
     </div>
 
     <button type="submit" class="btn-submit">
-      S'enregistrer
+      Se connecter
     </button>
   </form>
 </template>
