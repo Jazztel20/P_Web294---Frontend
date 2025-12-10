@@ -38,7 +38,7 @@ async function handleLogout() {
     <nav class="main-nav">
       <ul>
         <li><router-link :to="{ name: 'home' }">Accueil</router-link></li>
-        <li><router-link :to="{ name: 'books' }">Livres</router-link></li>
+        <li><router-link :to="{ name: 'categories' }">Livres</router-link></li>
       </ul>
     </nav>
     
