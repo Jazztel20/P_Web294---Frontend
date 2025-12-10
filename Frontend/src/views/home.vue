@@ -25,11 +25,12 @@ const featuredBooks = [
       ---------------------------------------- -->
       <section class="intro">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel iaculis nisl.
-          Aenean commodo tortor a dignissim pulvinar. Nulla consectetur vestibulum dolor, ac porta
-          orci lobortis blandit. Donec fringilla quam neque, et lacinia tortor condimentum id.
-          Praesent posuere, augue a varius scelerisque, nibh nisl posuere ligula, non ultrices nisi
-          ligula rutrum ante. Nunc tincidunt arcu lorem, in faucibus tellus…
+          Bienvenue sur Passion Lecture, l’espace dédié à tous ceux qui aiment découvrir, partager
+          et échanger autour des livres. Que vous soyez passionné de romans, amateur de mangas ou
+          curieux de nouvelles lectures, vous trouverez ici une plateforme ouverte où chacun peut
+          présenter ses ouvrages, laisser une appréciation ou consulter les avis de la communauté.
+          Plongez dans l’univers des lecteurs et laissez-vous inspirer par les dernières découvertes
+          !
         </p>
       </section>
 
