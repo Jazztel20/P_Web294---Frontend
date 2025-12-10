@@ -64,7 +64,7 @@ async function goToCategory(cat) {
               :key="cat.id"
               @click="goToCategory(cat)"
             >
-              {{ cat.label }} (id: {{ cat.id }})
+              {{ cat.label }}
             </div>
           </div>
         </aside>
