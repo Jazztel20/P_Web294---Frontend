@@ -76,7 +76,6 @@ async function handleSubmit(data) {
 
 .login-content {
   flex: 1;
-  background: #d8e9ff;
   display: flex;
   justify-content: center;
   align-items: center;
