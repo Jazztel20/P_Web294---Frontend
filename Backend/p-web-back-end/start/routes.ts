@@ -37,7 +37,7 @@ router.group(() => {
   router.get('books/:id', [BooksController, 'show'])
 
   router.get('books/:id/Rewiews', [BooksController, 'getReviewsByBook'])
-
+// salut theo
   //router.get('books/:id/comments', [CommentsController, 'index'])
 
   //router.get('books/:id/evaluates', [EvaluatesController, 'index'])
