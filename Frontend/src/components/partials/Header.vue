@@ -1,4 +1,30 @@
+
 <script setup>
+import { auth } from '@/stores/auth'
+
+
+const LOGOUT_URL = 'http://localhost:3333/user/logout'
+
+async function handleLogout() {
+  try {
+    const token = localStorage.getItem('authToken')
+
+    await fetch(LOGOUT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+  } catch (err) {
+    console.error(err)
+  } finally {
+    auth.logout()          // 👈 met à jour le store + localStorage
+    router.push('/')
+  }
+}
+
+
 
 </script>
 
@@ -15,8 +41,11 @@
         <li><router-link :to="{ name: 'books' }">Livres</router-link></li>
       </ul>
     </nav>
-
-    <div class="auth-buttons">
+    
+    <div v-if='auth.user' class="auth-buttons">
+      <button @click="handleLogout">Se déconnecter</button>
+    </div>
+    <div v-else class="auth-buttons">
       <router-link :to="{ name: 'register' }" class="auth-link">
         S’enregistrer
       </router-link>
