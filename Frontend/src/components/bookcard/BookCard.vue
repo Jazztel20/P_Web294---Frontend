@@ -46,7 +46,10 @@ onMounted(async () => {
     </div>
 
     <!-- Button -->
-    <router-link :to="`/books/${book.id}`" class="view-btn"> Voir l'évaluation ➜ </router-link>
+      <router-link :to="`/books/${book.id}`" class="view-btn">
+        <span class="text">Voir l'évaluation</span>
+        <span class="arrow">➜</span>
+      </router-link>
   </div>
 </template>
 
@@ -122,9 +125,39 @@ onMounted(async () => {
   text-decoration: none;
   font-size: 14px;
   transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* centrer le contenu */
+  position: relative;      /* pour positionner le texte absolu */
+  min-width: 150px;        /* largeur fixe du bouton */
+  overflow: hidden;
 }
 
 .view-btn:hover {
   background: #e0e7ff;
 }
+
+/* Texte disparaît, mais bouton reste même largeur */
+.view-btn .text {
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.view-btn:hover .text {
+  opacity: 0;
+}
+
+/* Flèche au-dessus du texte */
+.view-btn .arrow {
+  position: absolute;
+  right: 14px; /* alignée à droite */
+  transition: transform 0.3s ease;
+}
+
+.view-btn:hover .arrow {
+  transform: scale(1.3);
+}
+
+
+
 </style>
