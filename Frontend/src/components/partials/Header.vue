@@ -1,9 +1,34 @@
+
 <script setup>
-import { reactive } from 'vue'   
-const auth = reactive({
-  user: JSON.parse(localStorage.getItem('currentUser') || 'null')
-})
-const test = false
+import { auth } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+
+const LOGOUT_URL = 'http://localhost:3333/user/logout'
+
+async function handleLogout() {
+  try {
+    const token = localStorage.getItem('authToken')
+
+    await fetch(LOGOUT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+  } catch (err) {
+    console.error(err)
+  } finally {
+    auth.logout()          
+    router.push('/')
+  }
+}
+
+
+
 </script>
 
 <template>
@@ -16,14 +41,15 @@ const test = false
     <nav class="main-nav">
       <ul>
         <li><router-link :to="{ name: 'home' }">Accueil</router-link></li>
-        <li><router-link :to="{ name: 'books' }">Livres</router-link></li>
+        <li><router-link :to="{ name: 'categories' }">Livres</router-link></li>
       </ul>
     </nav>
     
-    <div v-if='test' class="auth-buttons">
-        <!-- <router-link :to="{ name: 'logout' }" class="auth-button">
-        Déconnecter
-      </router-link> -->
+    <div v-if='auth.user' class="auth-buttons">
+      <router-link :to="{ name: 'catalogue' }" class="auth-link">
+        Mes Livres
+      </router-link>
+      <button @click="handleLogout">Se déconnecter</button>
     </div>
     <div v-else class="auth-buttons">
       <router-link :to="{ name: 'register' }" class="auth-link">

@@ -16,6 +16,7 @@
 <script setup>
 import SimpleTextForm from '@/components/formulaire/LoginForm.vue'
 import { useRouter } from 'vue-router'
+import { auth } from '@/stores/auth'   // 👈 on importe le store
 
 const router = useRouter()
 
@@ -32,7 +33,6 @@ const fields = [
     type: 'password',
     placeholder: 'Entrez votre mot de passe'
   },
-  
 ]
 
 const LOGIN_URL = 'http://localhost:3333/user/login'
@@ -48,8 +48,16 @@ async function handleSubmit(data) {
     if (!res.ok) throw new Error('Identifiants incorrects')
 
     const result = await res.json()
-    localStorage.setItem('authToken', JSON.stringify(result.token))
-    localStorage.setItem('currentUser', JSON.stringify(result))
+
+    // 👉 adapte si ton backend renvoie { token, user }
+    const token = result.token
+    const user = result.user ?? result   // au cas où ce soit directement l’utilisateur
+
+    // ⚠️ PAS de JSON.stringify sur le token, sinon tu as `"token"` et pas `token`
+    localStorage.setItem('authToken', token)
+
+    // On met à jour le store (et ça mettra aussi à jour le Header)
+    auth.login(user)
 
     router.push('/')
   } catch (err) {
@@ -57,6 +65,7 @@ async function handleSubmit(data) {
   }
 }
 </script>
+
 
 <style scoped>
 .login-container {
@@ -67,7 +76,6 @@ async function handleSubmit(data) {
 
 .login-content {
   flex: 1;
-  background: #d8e9ff;
   display: flex;
   justify-content: center;
   align-items: center;

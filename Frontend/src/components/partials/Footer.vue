@@ -6,9 +6,9 @@
     <div class="footer-column">
       <div class="footer-title">Suivez-nous</div>
       <div class="social-icons">
-        <div class="social-icon">in</div>
-        <div class="social-icon">f</div>
-        <div class="social-icon">ig</div>
+        <div class="social-icon"><a href="https://fr.linkedin.com/"><img src="../../assets/images/linkedin.svg" alt="linkedin-logo"></a></div>
+        <div class="social-icon"><a href="https://www.facebook.com/"><img src="../../assets/images/facebook-logo.svg" alt="facebook-logo"></a></div>
+        <div class="social-icon"><a href="https://www.instagram.com/"><img src="../../assets/images/instagram.svg" alt="instagram-logo"></a></div>
       </div>
     </div>
 
@@ -26,9 +26,6 @@
 
 <style scoped="">
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
   background: #8ad6ff;
   border-top: 2px solid #0172c5;
@@ -37,7 +34,6 @@ footer {
   justify-content: space-evenly;
   align-items: flex-start;
   font-size: 12px;
-  z-index: 999;
 }
 
  
@@ -56,11 +52,9 @@ footer {
   margin-top: 4px;
 }
  
-.social-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid #000;
+.social-icon a img{
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
