@@ -6,64 +6,71 @@ export default class extends BaseSeeder {
     await Writer.createMany([
       {
         firstname: 'Antoine',
-        lastname: 'de Saint-Exupéry'
+        lastname: 'de Saint-Exupéry',
       },
       {
         firstname: 'George',
-        lastname: 'Orwell'
+        lastname: 'Orwell',
       },
       {
         firstname: 'Albert',
-        lastname: 'Camus'
+        lastname: 'Camus',
       },
       {
         firstname: 'J.K.',
-        lastname: 'Rowling'
+        lastname: 'Rowling',
       },
       {
         firstname: 'J.R.R.',
-        lastname: 'Tolkien'
+        lastname: 'Tolkien',
       },
       {
         firstname: 'Yuval Noah',
-        lastname: 'Harari'
+        lastname: 'Harari',
       },
       {
         firstname: 'Victor',
-        lastname: 'Hugo'
+        lastname: 'Hugo',
       },
       {
         firstname: 'Émile',
-        lastname: 'Zola'
+        lastname: 'Zola',
       },
       {
         firstname: 'Agatha',
-        lastname: 'Christie'
+        lastname: 'Christie',
       },
       {
         firstname: 'Stephen',
-        lastname: 'King'
+        lastname: 'King',
       },
       {
         firstname: 'Isaac',
-        lastname: 'Asimov'
+        lastname: 'Asimov',
       },
       {
         firstname: 'Gabriel',
-        lastname: 'García Márquez'
+        lastname: 'García Márquez',
       },
       {
         firstname: 'Haruki',
-        lastname: 'Murakami'
+        lastname: 'Murakami',
       },
       {
         firstname: 'Marguerite',
-        lastname: 'Yourcenar'
+        lastname: 'Yourcenar',
       },
       {
         firstname: 'Simone',
-        lastname: 'de Beauvoir'
-      }
+        lastname: 'de Beauvoir',
+      },
+      { firstname: 'Karl', lastname: 'Marx' },
+      { firstname: 'Friedrich', lastname: 'Engels' },
+      { firstname: 'Fidel', lastname: 'Castro' },
+      { firstname: 'Daniele', lastname: 'Ganser' },
+      { firstname: 'Machiavelli', lastname: 'Niccolò' },
+      { firstname: 'Sun', lastname: 'Tzu' },
+      { firstname: 'Anonymous', lastname: 'Collectif' },
     ])
   }
 }
