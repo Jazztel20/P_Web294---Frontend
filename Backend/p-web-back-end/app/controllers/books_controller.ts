@@ -66,8 +66,13 @@ export default class BooksController {
   /**
    * Show Books noted per user
    */
-  async showPerUser({}: HttpContext) {
-
+  async showPerUser({params, response}: HttpContext) {
+    const books = await Book.query().where('user_id' , params.user_id)
+    .preload('writer')
+    .preload('user')
+    .preload('category')
+    .preload('comment')
+    return response.ok(books)
   }
 async store({ request, auth, response }: HttpContext) {
   //const user = auth.user!

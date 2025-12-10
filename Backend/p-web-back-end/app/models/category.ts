@@ -10,7 +10,7 @@ export default class Category extends BaseModel {
   @column()
   declare label: string
 
-  @hasMany(()=> Writer)
+  @hasMany(() => Writer)
   declare writer: HasMany<typeof Writer>
 
   @column.dateTime({ autoCreate: true })
