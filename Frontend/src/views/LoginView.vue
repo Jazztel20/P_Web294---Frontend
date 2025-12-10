@@ -13,12 +13,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SimpleTextForm from '@/components/formulaire/LoginForm.vue'
 import { useRouter } from 'vue-router'
-import { auth } from '@/stores/auth'   // 👈 on importe le store
+import { useAuthStore, type User } from '@/stores/auth.ts'
 
 const router = useRouter()
+const auth = useAuthStore()
 
 const fields = [
   { 
@@ -37,7 +38,7 @@ const fields = [
 
 const LOGIN_URL = 'http://localhost:3333/user/login'
 
-async function handleSubmit(data) {
+async function handleSubmit(data: { username: string; password: string }) {
   try {
     const res = await fetch(LOGIN_URL, {
       method: 'POST',
@@ -48,23 +49,23 @@ async function handleSubmit(data) {
     if (!res.ok) throw new Error('Identifiants incorrects')
 
     const result = await res.json()
+    console.log('LOGIN RESULT:', result)
 
-    // 👉 adapte si ton backend renvoie { token, user }
-    const token = result.token
-    const user = result.user ?? result   // au cas où ce soit directement l’utilisateur
+    // On récupère le vrai token Bearer si présent
+    if (result.token?.token) {
+      localStorage.setItem('authToken', result.token.token)
+    }
 
-    // ⚠️ PAS de JSON.stringify sur le token, sinon tu as `"token"` et pas `token`
-    localStorage.setItem('authToken', token)
-
-    // On met à jour le store (et ça mettra aussi à jour le Header)
-    auth.login(user)
+    // On enregistre tout l’objet comme user (grâce au [key: string]: any)
+    auth.login(result as User)
 
     router.push('/')
-  } catch (err) {
+  } catch (err: any) {
     alert(err.message)
   }
 }
 </script>
+
 
 
 <style scoped>
