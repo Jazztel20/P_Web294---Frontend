@@ -26,9 +26,6 @@
 
 <style scoped="">
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
   background: #8ad6ff;
   border-top: 2px solid #0172c5;
@@ -37,7 +34,6 @@ footer {
   justify-content: space-evenly;
   align-items: flex-start;
   font-size: 12px;
-  z-index: 999;
 }
 
  

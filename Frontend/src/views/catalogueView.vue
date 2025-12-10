@@ -37,7 +37,6 @@ const books = [
 /* Page layout */
 .page-body {
   padding: 40px;
-  background: #f4f4f4;
   min-height: 100vh;
 }
 

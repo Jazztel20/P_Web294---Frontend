@@ -67,6 +67,7 @@ const featuredBooks = [
   display: flex;
   justify-content: center;
   padding: 20px;
+  margin: 70px 0;
 }
 
 .page-wrapper {
