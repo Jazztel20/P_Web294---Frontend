@@ -3,18 +3,26 @@
 // Imports
 // ---------------------------------------------------
 import BookCard from '@/components/bookcard/BookCard.vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
 // ---------------------------------------------------
 // Featured books for the homepage
 // (formatted for BookCard)
 // ---------------------------------------------------
-const featuredBooks = [
-  { id: 1, title: 'Kid Paddle', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 2, title: 'Sarko 5 ans', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 3, title: 'Pour Maël', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 4, title: 'Frappe atomique', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 5, title: 'Pour l’ETML', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-]
+const books = ref([])
+// ------------------------------
+// Fetch categories on page load
+// ------------------------------
+onMounted(async () => {
+  try {
+    const res = await axios.get('http://localhost:3333/books/home')
+    books.value = res.data
+  } catch (err) {
+    console.error('Failed to load books:', err)
+  }
+})
+
 </script>
 
 <template>
@@ -42,7 +50,7 @@ const featuredBooks = [
         <div class="book-cards">
           <!-- Replaces all your old hardcoded cards -->
           <BookCard
-            v-for="book in featuredBooks"
+            v-for="book in books"
             :key="book.id"
             :book="book"
             :showActions="false"
