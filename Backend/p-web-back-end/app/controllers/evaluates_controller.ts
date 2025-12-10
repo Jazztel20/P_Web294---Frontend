@@ -12,7 +12,19 @@ export default class EvaluatesController {
 
   return response.ok(evaluates)
 }
+async AvgRating({ params, response }: HttpContext) {
+  const evaluates = await Evaluate.query()
+    .where('book_id', params.id)
 
+  const averageRating = evaluates.length > 0
+    ? evaluates.reduce((sum, e) => sum + e.note, 0) / evaluates.length
+    : 0
+
+  return response.ok({
+    averageRating,
+    evaluates,
+  })
+}
   /**
    * Display form to create a new record
    */
