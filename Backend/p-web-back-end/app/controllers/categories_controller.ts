@@ -17,10 +17,7 @@ export default class CategoriesController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {
-    
-
-  }
+  async store({ request }: HttpContext) {}
 
   /**
    * Show individual record

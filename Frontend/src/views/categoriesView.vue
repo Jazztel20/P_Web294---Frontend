@@ -1,67 +1,50 @@
 <script setup>
-// -------------------------------------------
-// Imports
-// -------------------------------------------
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 import { useRouter } from 'vue-router'
 import BookCard from '@/components/bookcard/BookCard.vue'
 
-// Router instance (for navigation)
 const router = useRouter()
 
-// -------------------------------------------
-// Navigate to a category page
-// -------------------------------------------
-function goToCategory(cat) {
-  router.push(`/categories/${cat.id}/books`)
+// ------------------------------
+// Reactivity
+// ------------------------------
+const categories = ref([])
+const books = ref([])
+const selectedCategory = ref('')
+
+// ------------------------------
+// Fetch categories on page load
+// ------------------------------
+onMounted(async () => {
+  try {
+    const res = await axios.get('http://localhost:3333/categories')
+    categories.value = res.data
+  } catch (err) {
+    console.error('Failed to load categories:', err)
+  }
+})
+
+// ------------------------------
+// Load books for the clicked category
+// ------------------------------
+async function goToCategory(cat) {
+  selectedCategory.value = cat.label
+
+  try {
+    const res = await axios.get(`http://localhost:3333/categories/${cat.id}/books`)
+
+    // Map backend → frontend format for BookCard.vue
+    books.value = res.data.map((book) => ({
+      id: book.id,
+      title: book.title,
+      image: book.imagePath, // adapt backend field
+      rating: 0, // backend has no rating, set a default
+    }))
+  } catch (err) {
+    console.error('Failed to load books:', err)
+  }
 }
-
-// -------------------------------------------
-// Category list (static demo data)
-// -------------------------------------------
-const categories = [
-  { id: 1, name: 'Fiction' },
-  { id: 2, name: 'Biographies' },
-  { id: 3, name: 'Science' },
-  { id: 4, name: 'History' },
-  { id: 5, name: 'Art' },
-  { id: 6, name: 'German Literature' },
-  { id: 7, name: 'Philosophy' },
-  { id: 8, name: 'Political Theory' },
-  { id: 9, name: 'Revolutionary Texts' },
-  { id: 10, name: 'Mythology' },
-  { id: 11, name: 'Children' },
-  { id: 12, name: 'Mystery' },
-  { id: 13, name: 'Sociology' },
-  { id: 14, name: 'Economics' },
-  { id: 15, name: 'Psychology' },
-  { id: 16, name: 'Religion' },
-]
-
-// Current category (you can update this dynamically later)
-const selectedCategory = ref('Fiction')
-
-// -------------------------------------------
-// Books list formatted for <BookCard>
-// -------------------------------------------
-const books = [
-  { id: 1, title: "L'Étranger", image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 2, title: 'The Communist Manifesto', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 3, title: 'Fidel Castro: My Life', image: '/covers/nicolas_sarkozy.jpg', rating: 4 },
-  { id: 4, title: 'Operation Gladio', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 5, title: 'Astérion et le Minotaure', image: '/covers/nicolas_sarkozy.jpg', rating: 4 },
-  { id: 6, title: 'Kid Paddle', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 7, title: 'Sartre — pétition 23/01/77', image: '/covers/nicolas_sarkozy.jpg', rating: 4 },
-  { id: 8, title: 'The Prince', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  {
-    id: 9,
-    title: 'Maoism & Life Expectancy in China',
-    image: '/covers/nicolas_sarkozy.jpg',
-    rating: 5,
-  },
-  { id: 10, title: 'Capital Vol. 1', image: '/covers/nicolas_sarkozy.jpg', rating: 5 },
-  { id: 11, title: 'The Art of War', image: '/covers/nicolas_sarkozy.jpg', rating: 4 },
-]
 </script>
 
 <template>
@@ -81,7 +64,7 @@ const books = [
               :key="cat.id"
               @click="goToCategory(cat)"
             >
-              {{ cat.name }}
+              {{ cat.label }}
             </div>
           </div>
         </aside>
