@@ -19,7 +19,9 @@ type Book = {
     },
     editionYear: Date,
     numberOfPages: number,
-    category: string,
+    category: {
+        label: string
+    }
 }
 
 const loading = ref(true)
@@ -100,7 +102,7 @@ onMounted(() => {
                         <p class="detail-value">{{ book.editionYear }}</p>
                         
                         <h3 class="detail-label">Catégorie</h3>
-                        <p class="detail-value">{{ book.category }}</p>
+                        <p class="detail-value">{{ book.category.label }}</p>
                         
                         <h3 class="detail-label">Editeur</h3>
                         <p class="detail-value">{{ book.editor }}</p>
