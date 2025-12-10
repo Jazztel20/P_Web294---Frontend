@@ -1,28 +1,17 @@
-<script setup>
+<script setup lang="ts">
 // ---------------------------------------------------
 // Imports
 // ---------------------------------------------------
 import BookCard from '@/components/bookcard/BookCard.vue'
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { homePageAPI} from '@/api/books'
+import type { Book } from '@/api/books'
 
-// ---------------------------------------------------
-// Featured books for the homepage
-// (formatted for BookCard)
-// ---------------------------------------------------
-const books = ref([])
-// ------------------------------
-// Fetch categories on page load
-// ------------------------------
+const books = ref<Book[]>([])
+
 onMounted(async () => {
-  try {
-    const res = await axios.get('http://localhost:3333/books/home')
-    books.value = res.data
-  } catch (err) {
-    console.error('Failed to load books:', err)
-  }
+  books.value = await homePageAPI()  // récupère les livres via l'API
 })
-
 </script>
 
 <template>
