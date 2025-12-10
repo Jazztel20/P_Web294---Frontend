@@ -1,15 +1,24 @@
-<script setup>
-defineProps({
-  book: {
-    type: Object,
-    required: true,
-  },
-  showActions: {
-    type: Boolean,
-    default: false, // ✅ buttons hidden by default
-  },
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import type { Book } from '@/api/books'
+import { booksRatingAvg } from '@/api/books'
+
+const props = defineProps<{ book: Book, showActions?: boolean }>()
+
+const averageRating = ref(0)
+
+onMounted(async () => {
+  try {
+    const data = await booksRatingAvg(props.book.id)
+    // S'assurer que c'est un nombre
+    averageRating.value = Number(data.averageRating) || 0
+  } catch (err) {
+    console.error('Failed to load average rating:', err)
+    averageRating.value = 0
+  }
 })
 </script>
+
 
 <template>
   <div class="book-card">
@@ -32,7 +41,8 @@ defineProps({
 
     <!-- Stars -->
     <div class="stars">
-      <span v-for="n in book.rating" :key="n">★</span>
+      <span v-for="n in Math.round(averageRating)" :key="n">★</span>
+      <span v-if="averageRating === 0">Pas encore noté</span>
     </div>
 
     <!-- Button -->

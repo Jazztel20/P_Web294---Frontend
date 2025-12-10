@@ -37,6 +37,8 @@ router.group(() => {
   router.get('books/:id', [BooksController, 'show'])
 
   router.get('books/:id/Rewiews', [BooksController, 'getReviewsByBook'])
+
+  router.get('books/:id/AvgRating',[EvaluatesController, 'AvgRating'])
 // salut theo
   //router.get('books/:id/comments', [CommentsController, 'index'])
 

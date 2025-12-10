@@ -10,6 +10,14 @@ export interface Book {
   user?: { username: string };
 }
 
+export interface Evaluate {
+  id: number
+  note: number
+}
+
+
+
+//API pour la page home
 export async function homePageAPI(): Promise<Book[]> {
   try {
     const res = await axios.get<Book[]>('http://localhost:3333/books/home');
@@ -17,6 +25,16 @@ export async function homePageAPI(): Promise<Book[]> {
   } catch (err) {
     console.error('Failed to load books:', err);
     return [];
+  }
+}
+//API pour le ratin d'un books avg
+export async function booksRatingAvg(bookId: number): Promise<{ evaluates: Evaluate[]; averageRating: number }> {
+  try {
+    const res = await axios.get(`http://localhost:3333/books/${bookId}/AvgRating`);
+    return res.data;
+  } catch (err) {
+    console.error('Failed to load ratings:', err);
+    return { evaluates: [], averageRating: 0 };
   }
 }
 
