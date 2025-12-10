@@ -6,10 +6,9 @@ import Writer from '#models/writer'
 
 export default class extends BaseSeeder {
   async run() {
-    const categories = await Category.all()
-    const users = await User.all()
-    const writers = await Writer.all()
-
+      const categories = await Category.query().orderBy('id', 'asc')
+      const users = await User.query().orderBy('id', 'asc')
+      const writers = await Writer.query().orderBy('id', 'asc')
     await Book.createMany([
       {
         title: 'Le Petit Prince',
