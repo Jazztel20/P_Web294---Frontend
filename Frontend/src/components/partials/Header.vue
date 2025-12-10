@@ -1,6 +1,9 @@
 
 <script setup>
 import { auth } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 
 const LOGOUT_URL = 'http://localhost:3333/user/logout'
@@ -19,7 +22,7 @@ async function handleLogout() {
   } catch (err) {
     console.error(err)
   } finally {
-    auth.logout()          // 👈 met à jour le store + localStorage
+    auth.logout()          
     router.push('/')
   }
 }
@@ -43,6 +46,9 @@ async function handleLogout() {
     </nav>
     
     <div v-if='auth.user' class="auth-buttons">
+      <router-link :to="{ name: 'catalogue' }" class="auth-link">
+        Mes Livres
+      </router-link>
       <button @click="handleLogout">Se déconnecter</button>
     </div>
     <div v-else class="auth-buttons">
