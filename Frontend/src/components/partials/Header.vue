@@ -1,10 +1,10 @@
 
-<script setup>
-import { auth } from '@/stores/auth'
+<script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.ts'
 
 const router = useRouter()
-
+const auth = useAuthStore()
 
 const LOGOUT_URL = 'http://localhost:3333/user/logout'
 
@@ -22,14 +22,12 @@ async function handleLogout() {
   } catch (err) {
     console.error(err)
   } finally {
-    auth.logout()          
+    auth.logout()
     router.push('/')
   }
 }
-
-
-
 </script>
+
 
 <template>
   <header class="top-bar">
@@ -45,7 +43,7 @@ async function handleLogout() {
       </ul>
     </nav>
     
-    <div v-if='auth.user' class="auth-buttons">
+    <div v-if='auth.isLoggedIn' class="auth-buttons">
       <router-link :to="{ name: 'catalogue' }" class="auth-link">
         Mes Livres
       </router-link>
