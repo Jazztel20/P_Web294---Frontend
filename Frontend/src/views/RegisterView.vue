@@ -17,64 +17,85 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SimpleTextForm from '@/components/formulaire/RegisterForm.vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore, type User } from '@/stores/auth'
 
 const router = useRouter()
+const auth = useAuthStore()
+
+const REGISTER_URL = 'http://localhost:3333/user/register'
 
 const fields = [
   {
     name: 'username',
-    label: "Nom Utilisateur",
+    label: 'Nom Utilisateur',
     type: 'text',
-    placeholder: ""
+    placeholder: '',
   },
-  { 
+  {
     name: 'password',
     label: 'Mot de passe',
     type: 'password',
-    placeholder: ''
+    placeholder: '',
   },
-  { 
+  {
     name: 'confirmPassword',
     label: 'Confirmer Mot de passe',
     type: 'password',
-    placeholder: ''
+    placeholder: '',
   },
 ]
 
-const REGISTER_URL = 'http://localhost:3333/user/register'
+type RegisterFormData = {
+  username: string
+  password: string
+  confirmPassword: string
+}
 
-async function handleSubmit(data) {
-  // Vérification que les mots de passe correspondent
+async function handleSubmit(data: RegisterFormData) {
   if (data.password !== data.confirmPassword) {
     alert('Les mots de passe ne correspondent pas')
     return
   }
 
   try {
-    // On n'envoie pas confirmPassword au backend
+    // on retire confirmPassword avant envoi
     const { confirmPassword, ...registerData } = data
-    
+
     const res = await fetch(REGISTER_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(registerData),
     })
 
-    if (!res.ok) throw new Error('Erreur lors de l\'inscription')
+    if (!res.ok) {
+      const error = await res.json()
+      throw new Error(error.message || 'Erreur lors de l’inscription')
+    }
+  const result = await res.json()
 
-    const result = await res.json()
-    localStorage.setItem('authToken', JSON.stringify(result.token))
-    localStorage.setItem('currentUser', JSON.stringify(result))
+  localStorage.setItem('authToken', result.token.token)
 
-    router.push('/')
-  } catch (err) {
-    alert(err.message)
+  const user: User = {
+    id: result.id,
+    username: result.username,
   }
-}
+
+  localStorage.setItem('currentUser', JSON.stringify(user))
+
+  auth.login(user)
+
+  router.push('/')
+    } catch (err: any) {
+      alert(err.message)
+    }
+  }
 </script>
+
 
 <style scoped>
 .register-container {
