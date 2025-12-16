@@ -1,3 +1,6 @@
+import type { Writer } from '@/models/Writer'
+import type { Category } from '@/models/Category'
+
 export interface Book {
     id: string,
     title: string,
@@ -13,13 +16,6 @@ export interface Book {
     userId: number,
     global_rating: number,
     total_comments: number,
-    writer: {
-        id: number,
-        firstname: string,
-        lastname: string
-    },
-    category: {
-        id: number,
-        label: string
-    }
+    writer : Writer,
+    category: Category,
 }
