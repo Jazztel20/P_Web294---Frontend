@@ -6,7 +6,7 @@ export interface Book {
   image?: string;
   rating?: number;
   numberOfPages?: number;
-  pdfLink: string;
+  pdfLink?: string;
   abstract?: string;
   editor?: string;
   editionYear?: number;
