@@ -1,10 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <div 
-      v-for="(field, idx) in fields" 
-      :key="idx"
-      class="form-group"
-    >
+    <div v-for="(field, idx) in fields" :key="idx" class="form-group">
       <label :for="field.name">{{ field.label }}</label>
 
       <!-- input texte / password / email etc. -->
@@ -17,9 +13,7 @@
       />
     </div>
 
-    <button type="submit" class="btn-submit">
-      S'enregistrer
-    </button>
+    <button type="submit" class="btn-submit">S'enregistrer</button>
   </form>
 </template>
 
@@ -29,8 +23,8 @@ import { reactive } from 'vue'
 const props = defineProps({
   fields: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const emit = defineEmits(['submit'])
@@ -38,7 +32,7 @@ const emit = defineEmits(['submit'])
 const formData = reactive({})
 
 // Initialisation
-props.fields.forEach(field => {
+props.fields.forEach((field) => {
   formData[field.name] = ''
 })
 
@@ -59,12 +53,12 @@ function onSubmit() {
   border-radius: 8px;
   font-size: 15px;
   outline: none;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .form-input:focus {
   border-color: #0097ff;
-  box-shadow: 0 0 6px rgba(0,151,255,0.4);
+  box-shadow: 0 0 6px rgba(0, 151, 255, 0.4);
 }
 
 label {
@@ -84,13 +78,12 @@ label {
   font-weight: 700;
   border: none;
   cursor: pointer;
-  transition: .15s;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+  transition: 0.15s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
 }
 
 .btn-submit:hover {
   background: #0c8ad4;
   transform: translateY(-1px);
 }
-
 </style>
