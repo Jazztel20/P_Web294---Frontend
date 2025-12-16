@@ -1,13 +1,9 @@
 <template>
   <div class="login-container">
-    
     <main class="login-content">
       <div class="login-card">
         <h2 class="login-title">Connexion</h2>
-        <SimpleTextForm 
-          :fields="fields"
-          @submit="handleSubmit"
-        />
+        <SimpleTextForm :fields="fields" @submit="handleSubmit" />
       </div>
     </main>
   </div>
@@ -22,17 +18,17 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const fields = [
-  { 
+  {
     name: 'username',
     label: "Nom d'utilisateur",
     type: 'text',
-    placeholder: "Entrez votre nom d'utilisateur"
+    placeholder: "Entrez votre nom d'utilisateur",
   },
-  { 
+  {
     name: 'password',
     label: 'Mot de passe',
     type: 'password',
-    placeholder: 'Entrez votre mot de passe'
+    placeholder: 'Entrez votre mot de passe',
   },
 ]
 
@@ -47,17 +43,18 @@ async function handleSubmit(data: { username: string; password: string }) {
     })
 
     if (!res.ok) throw new Error('Identifiants incorrects')
-
     const result = await res.json()
-    console.log('LOGIN RESULT:', result)
 
-    // On récupère le vrai token Bearer si présent
-    if (result.token?.token) {
-      localStorage.setItem('authToken', result.token.token)
+    localStorage.setItem('authToken', result.token.token)
+
+    const user: User = {
+      id: result.id,
+      username: result.username,
     }
 
-    // On enregistre tout l’objet comme user (grâce au [key: string]: any)
-    auth.login(result as User)
+    localStorage.setItem('currentUser', JSON.stringify(user))
+
+    auth.login(user)
 
     router.push('/')
   } catch (err: any) {
@@ -65,8 +62,6 @@ async function handleSubmit(data: { username: string; password: string }) {
   }
 }
 </script>
-
-
 
 <style scoped>
 .login-container {
@@ -90,7 +85,7 @@ async function handleSubmit(data: { username: string; password: string }) {
   padding: 36px 40px;
   border-radius: 18px;
   border: 1px solid #d8e9ff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   animation: fadeUp 0.4s ease-out;
 }
 
@@ -103,7 +98,13 @@ async function handleSubmit(data: { username: string; password: string }) {
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(15px);}
-  to { opacity: 1; transform: translateY(0);}
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

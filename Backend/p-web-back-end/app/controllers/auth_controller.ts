@@ -22,8 +22,13 @@ export default class AuthController {
  const payload = await request.validateUsing(registerValidator)
  // Création de l'utilisateur
  const user = await User.create(payload)
- // Retourne les données utilisateurs
- return response.created(user)
+ // Retourne les données utilisateur
+ const token = await User.accessTokens.create(user)
+
+ return response.created({
+    token: token,
+    ...user.serialize(),
+ })
  }
  /**
  * Supprime le token OAT de l'utilisateur connecté
