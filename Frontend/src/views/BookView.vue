@@ -3,26 +3,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-
-type Book = {
-    id: string,
-    title: string,
-    abstract: string,
-    comment: string,
-    editor: string,
-    global_rating: number,
-    total_comments: number,
-    imagePath: string,
-    writer: {
-        firstname: string,
-        lastname: string
-    },
-    editionYear: Date,
-    numberOfPages: number,
-    category: {
-        label: string
-    }
-}
+import type { Book } from '@/models/Book'
 
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -31,36 +12,84 @@ const book = ref<Book | null>(null)
 const route = useRoute()
 const bookId = route.params.id as string
 
-if (!bookId) {
-    error.value = "ID du livre manquant"
-    loading.value = false
-}
-
-async function fetchBook(): Promise<void> {
+async function fetchBook(): Promise<Book> {
     loading.value = true
-    
+    error.value = null
+
     try {
-        const response = await fetch(`http://localhost:3333/books/${bookId}`)
-        
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP: ${response.status}`)
+    const response = await fetch(`http://localhost:3333/books/${bookId}`)
+
+    const data = await response.json()
+
+    const bookWithDefaults: Book = {
+            id: data.id ?? '',
+            title: data.title ?? 'Titre non disponible',
+            numberOfPages: data.numberOfPages ?? 0,
+            pdfLink: data.pdfLink ?? '',
+            abstract: data.abstract ?? 'Résumé non disponible',
+            editor: data.editor ?? 'Éditeur inconnu',
+            editionYear: data.editionYear ? new Date(data.editionYear) : new Date(),
+            imagePath: data.imagePath ?? '/default-cover.jpg',
+            comment: data.comment ?? '',
+            categoryId: data.categoryId ?? 0,
+            writerId: data.writerId ?? 0,
+            userId: data.userId ?? 0,
+            global_rating: data.global_rating ?? 0,
+            total_comments: data.total_comments ?? 0,
+            writer: {
+                id: data.writer?.id ?? 0,
+                firstname: data.writer?.firstname ?? 'Prénom inconnu',
+                lastname: data.writer?.lastname ?? 'Nom inconnu'
+            },
+            category: {
+                id: data.category?.id ?? 0,
+                label: data.category?.label ?? 'Catégorie inconnue'
+            }
         }
-        
-        const body = await response.json()
-        book.value = body
-        
-    } catch (err) {
-        error.value = err instanceof Error ? err.message : "Erreur lors de la récupération du livre"
-        console.error(error.value)
-        
+
+        return bookWithDefaults
+
+    } catch (err: any) {
+        error.value = err.message || 'Erreur inconnue'
+        console.error(err)
+        return {
+            id: '',
+            title: 'Livre non trouvé',
+            numberOfPages: 0,
+            pdfLink: '',
+            abstract: '',
+            editor: '',
+            editionYear: new Date(),
+            imagePath: '/default-cover.jpg',
+            comment: '',
+            categoryId: 0,
+            writerId: 0,
+            userId: 0,
+            global_rating: 0,
+            total_comments: 0,
+            writer: { id: 0, firstname: '', lastname: '' },
+            category: { id: 0, label: '' }
+        }
+
     } finally {
         loading.value = false
     }
 }
 
-onMounted(() => {
+// ASYNCHRONOUS FUNCTION | 
+// 1. PROBLEM - WAITING THE LOAD PROMISE COMING FROM FETCHBOOK()
+// 
+// 2. 
+// 
+onMounted(async () => {
+    // Récupération d'un livre complet
+    
     if (bookId) {
-        fetchBook()
+        book.value = await fetchBook()
+        
+        console.log("Titre du Livre Actuel :", book.value.title)
+
+        return book.value
     }
 })
 </script>
