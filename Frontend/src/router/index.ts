@@ -29,6 +29,11 @@ const router = createRouter({
       component: () => import('../views/categoriesView.vue'),
     },
     {
+      path: '/book/:id/editBook',
+      name: 'edit',
+      component: () => import('../views/EditBook.vue'),
+    },
+    {
       path: '/catalogue',
       name: 'catalogue',
       component: () => import('../views/catalogueView.vue'),

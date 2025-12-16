@@ -24,7 +24,7 @@ onMounted(async () => {
   <div class="book-card">
     <!-- ✅ Optional Action buttons -->
     <div v-if="showActions" class="card-actions">
-      <router-link :to="`/books/${book.id}/editbook`" title="Modifier" class="action-btn">
+      <router-link :to="`/book/${book.id}/editBook`" title="Modifier" class="action-btn">
         ⚙️
       </router-link>
 
@@ -69,8 +69,8 @@ onMounted(async () => {
 
 .book-card:hover {
   transform: translateY(-5px);
+  box-shadow: 15px 10px 10px rgb(229, 236, 255);
 }
-
 .card-actions {
   position: absolute;
   top: 10px;
@@ -134,7 +134,7 @@ onMounted(async () => {
 }
 
 .view-btn:hover {
-  background: #e0e7ff;
+  background: #e0e7ff; 
 }
 
 /* Texte disparaît, mais bouton reste même largeur */

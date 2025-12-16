@@ -78,19 +78,15 @@ async function handleSubmit(data: RegisterFormData) {
     }
   const result = await res.json()
 
-  // 🔐 token stocké séparément
   localStorage.setItem('authToken', result.token.token)
 
-  // 👤 utilisateur seulement
   const user: User = {
     id: result.id,
     username: result.username,
   }
 
-  // stockage optionnel
   localStorage.setItem('currentUser', JSON.stringify(user))
 
-  // ✅ conforme au store
   auth.login(user)
 
   router.push('/')
