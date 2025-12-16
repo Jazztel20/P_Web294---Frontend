@@ -34,7 +34,9 @@ onMounted(async () => {
     </div>
 
     <!-- Image -->
-    <img :src="book.image" alt="Couverture" />
+
+
+    <img src="https://www.fleuruseditions.com/media/catalog/product/cache/36e9c0117567386e14298332eb00cf61/9/7/9782215159254.jpg" alt="Couverture" class="fotorama__img" aria-hidden="false">
 
     <!-- Title -->
     <h2>{{ book.title }}</h2>

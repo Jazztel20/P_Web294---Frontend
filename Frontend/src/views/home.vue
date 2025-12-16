@@ -38,7 +38,6 @@ onMounted(async () => {
         <h2 class="section-title">Livres</h2>
 
         <div class="book-cards">
-          <!-- Replaces all your old hardcoded cards -->
           <BookCard
             v-for="book in books"
             :key="book.id"
