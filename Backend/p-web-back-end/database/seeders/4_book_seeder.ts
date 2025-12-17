@@ -21,7 +21,7 @@ export default class extends BaseSeeder {
         editionYear: 1943,
         imagePath: '/images/petit-prince.jpg',
         categoryId: categories[0].id, // Fiction
-        writerId: writers.find(e => e.firstname == "Antoine"), // Antoine de Saint-Exupéry
+        writerId: writers[1].id,
         userId: users[1].id,
       },
       {
