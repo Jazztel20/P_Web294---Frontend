@@ -2,8 +2,8 @@ import axios from 'axios'
 
 export interface Writer {
   id: number
-  first_name: string
-  last_name: string
+  firstname: string
+  lastname: string
 }
 
 export async function getWriters(): Promise<Writer[]> {
@@ -11,10 +11,10 @@ export async function getWriters(): Promise<Writer[]> {
   return res.data
 }
 
-export async function createWriter(first_name: string, last_name: string): Promise<Writer> {
+export async function createWriter(firstname: string, lastname: string): Promise<Writer> {
   const res = await axios.post('http://localhost:3333/writers', {
-    first_name,
-    last_name,
+    firstname,
+    lastname,
   })
   return res.data
 }
