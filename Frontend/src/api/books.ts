@@ -40,7 +40,7 @@ export async function fetchBook(bookId: number): Promise<{ book: Book }> {
   }
 }
 
-export async function editBook(bookId: number, payload: Partial<Book>): Promise<{ book: Book }> {
+export async function updateBook(bookId: number, payload: Partial<Book>): Promise<{ book: Book }> {
   try {
     const res = await axios.put<{ book: Book }>(`http://localhost:3333/books/${bookId}`, payload)
 
