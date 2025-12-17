@@ -3,6 +3,7 @@ import type { Book } from '@/models/book'
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchBook, updateBook } from '@/api/books'
+import type { Writer } from '@/api/writer'
 
 const route = useRoute()
 const router = useRouter()
@@ -26,18 +27,24 @@ const form = reactive<Book>({
   abstract: '',
   editor: '',
   editionYear: '',
-  category: { name: '' } as any,
-  writer: { name: '' } as any,
+  category: { label: '' } as object | undefined,
 } as Book)
+
+const wId = form.writerId
+
+const formWriter = reactive<Writer>({
+  id: wId,
+  firstname: '',
+  lastname: '',
+} as Writer)
 
 function hydrateForm(b: Book) {
   // évite les crashs si certains sous-objets sont absents
   const safe = {
     ...b,
-    category: b.category ?? { name: '' },
-    writer: b.writer ?? { name: '' },
   }
-
+  console.log('Livre Objet :', b)
+  console.log('Details:', form.writer)
   // copie dans reactive(form)
   Object.assign(form, safe)
 }
@@ -51,7 +58,7 @@ async function loadBook() {
     const data = await fetchBook(bookId)
     book.value = data
     hydrateForm(data)
-  } catch (e: any) {
+  } catch (e: Error) {
     error.value = e?.message ?? 'Failed to load book'
   } finally {
     loading.value = false
@@ -79,7 +86,7 @@ async function onSubmit() {
     success.value = 'Livre mis à jour.'
     // optionnel : rediriger après succès
     // router.push({ name: 'book', params: { id: bookId } })
-  } catch (e: any) {
+  } catch (e: Error) {
     error.value = e?.message ?? 'Failed to update book'
   } finally {
     saving.value = false
@@ -90,49 +97,205 @@ onMounted(loadBook)
 </script>
 
 <template>
-  <div v-if="loading">Chargement...</div>
-  <div v-else>
-    <p v-if="error" style="color: red">{{ error }}</p>
-    <p v-if="success" style="color: green">{{ success }}</p>
+  <div class="page">
+    <main class="content">
+      <h2 class="headline">Veuillez remplir les champs pour modifier un ouvrage</h2>
 
-    <div class="grid-parent">
-      <div class="grid-child">
-        <form @submit.prevent="onSubmit">
-          <label for="titre">Titre</label><br />
-          <input type="text" id="titre" v-model="form.title" />
+      <p v-if="loading" class="state">Chargement…</p>
+      <p v-else-if="error" class="alert alert--error">{{ error }}</p>
+      <p v-else-if="success" class="alert alert--success">{{ success }}</p>
 
-          <label for="categorie">Catégorie</label><br />
-          <input type="text" id="categorie" v-model="form.category.name" />
+      <form v-if="!loading" class="form-card" @submit.prevent="onSubmit">
+        <div class="form-grid">
+          <!-- Colonne gauche -->
+          <section class="col">
+            <div class="field">
+              <label for="titre">Titre</label>
+              <input id="titre" type="text" v-model="form.title" />
+            </div>
 
-          <label for="pages">Nombre de pages</label><br />
-          <input type="number" id="pages" v-model.number="form.numberOfPages" />
+            <div class="field">
+              <label for="categorie">Catégorie</label>
+              <input id="categorie" type="text" v-model="form.category.name" />
+            </div>
 
-          <label for="extrait">Extrait</label><br />
-          <input type="text" id="extrait" v-model="form.pdfLink" />
+            <div class="field">
+              <label for="pages">Nombre de pages</label>
+              <input id="pages" type="number" v-model.number="form.numberOfPages" />
+            </div>
 
-          <label for="resume">Résumé</label><br />
-          <textarea id="resume" v-model="form.abstract"></textarea>
+            <div class="field">
+              <label for="extrait">Extrait (pdf)</label>
+              <input id="extrait" type="url" v-model="form.pdfLink" />
+            </div>
+          </section>
 
-          <label for="auteur">Auteur</label><br />
-          <input type="text" id="auteur" v-model="form.writer.name" />
+          <!-- Colonne centrale -->
+          <section class="col">
+            <div class="field field--textarea">
+              <label for="resume">Résumé</label>
+              <textarea id="resume" v-model="form.abstract"></textarea>
+            </div>
 
-          <label for="editeur">Éditeur</label><br />
-          <input type="text" id="editeur" v-model="form.editor" />
+            <div class="field">
+              <label for="auteur">Prénom et nom de l’écrivain</label>
+              <input id="auteur" type="text" v-model="formWriter.firstname" />
+            </div>
+          </section>
 
-          <label for="date_publication">Date de publication</label><br />
-          <input type="date" id="date_publication" v-model="form.editionYear" />
+          <!-- Colonne droite -->
+          <section class="col">
+            <div class="field">
+              <label for="editeur">Éditeur</label>
+              <input id="editeur" type="text" v-model="form.editor" />
+            </div>
 
-          <button type="submit" :disabled="saving">
-            {{ saving ? 'Enregistrement...' : 'Submit' }}
+            <div class="field">
+              <label for="date_publication">Année d’édition</label>
+              <input id="date_publication" type="date" v-model="form.editionYear" />
+            </div>
+
+            <div class="field">
+              <label>Image de couverture</label>
+              <button class="btn btn--ghost" type="button">Importer une image</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button class="btn btn--link" type="button" @click="router.back()">Annuler</button>
+
+          <button class="btn btn--primary" type="submit" :disabled="saving">
+            {{ saving ? 'Enregistrement…' : 'Enregistrer l’ouvrage' }}
           </button>
-
-          <button type="button" @click="loadBook" :disabled="saving">Réinitialiser</button>
-
-          <button type="button" @click="router.back()" :disabled="saving">Retour</button>
-        </form>
-      </div>
-    </div>
+        </div>
+      </form>
+    </main>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* Page */
+.page {
+  min-height: 70vh;
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  padding: 32px 24px;
+}
+
+/* Content */
+.content {
+  width: 100%;
+}
+
+.headline {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 26px;
+}
+
+/* States */
+.state {
+  text-align: center;
+}
+
+/* Alerts */
+.alert {
+  margin: 0 auto 16px;
+  width: min(1050px, 100%);
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+.alert--error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+.alert--success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+/* Card */
+.form-card {
+  width: min(1050px, 100%);
+  margin: 0 auto;
+}
+
+/* Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  gap: 34px;
+}
+
+/* Fields */
+.field {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.field label {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.field input,
+.field textarea {
+  background: #dff0ff;
+  border: 2px solid #2f6fcf;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 16px;
+}
+
+.field textarea {
+  min-height: 260px;
+  resize: vertical;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 18px;
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 14px;
+  padding: 10px 20px;
+}
+
+.btn--primary {
+  background: #7fc16b;
+}
+
+.btn--link {
+  background: transparent;
+}
+
+.btn--ghost {
+  background: #e5e7eb;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .actions {
+    flex-direction: column;
+  }
+}
+</style>

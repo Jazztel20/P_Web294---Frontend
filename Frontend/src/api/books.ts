@@ -1,45 +1,7 @@
 import axios from 'axios'
-
-// -----------------------------
-// Types
-// -----------------------------
-export interface Book {
-  id: number
-  title: string
-
-  // champs backend (snake_case)
-  image_path?: string
-  number_of_pages?: number
-  pdf_link?: string
-  abstract?: string
-  editor?: string
-  edition_year?: number
-  category_id?: number
-  writer_id?: number
-  user_id?: number
-
-  // relations possibles (si preload côté backend)
-  writer?: { firstname: string; lastname: string }
-  category?: { name: string }
-  user?: { id: number; username: string }
-}
-
-export interface Evaluate {
-  id: number
-  note: number
-}
-
-export type CreateBookPayload = {
-  title: string
-  category_id: number
-  number_of_pages: number
-  pdf_link: string
-  abstract: string
-  editor: string
-  edition_year: number
-  image_path: string
-  writer_id: number
-}
+import { ref } from 'vue'
+import type { Book, BookCreation } from '@/models/Book'
+import type { Evaluate } from '@/models/Evaluate'
 
 // -----------------------------
 // API calls
@@ -55,18 +17,8 @@ export async function homePageAPI(): Promise<Book[]> {
   }
 }
 
-export async function getBooks(): Promise<Book[]> {
-  try {
-    const res = await axios.get<Book[]>('http://localhost:3333/books')
-    return res.data
-  } catch (err) {
-    console.error('Failed to load books:', err)
-    return []
-  }
-}
-
 export async function booksRatingAvg(
-  bookId: number
+  bookId: number,
 ): Promise<{ evaluates: Evaluate[]; averageRating: number }> {
   try {
     const res = await axios.get(`http://localhost:3333/books/${bookId}/AvgRating`)
@@ -77,25 +29,59 @@ export async function booksRatingAvg(
   }
 }
 
-export async function EditBook(bookId: number): Promise<Book> {
+export async function getBooks(): Promise<Book[]> {
   try {
-    const res = await axios.get<Book>(`http://localhost:3333/books/${bookId}`)
+    const res = await axios.get<Book[]>('http://localhost:3333/books')
     return res.data
   } catch (err) {
-    console.error('Failed to load book:', err)
-    // fallback minimal sans casser TS
-    return { id: 0, title: '' }
+    console.error('Failed to load books:', err)
+    return []
   }
 }
 
-export async function createBook(payload: CreateBookPayload) {
+const error = ref<string | null>(null)
+
+export async function fetchBook(bookId: number): Promise<{ book: Book }> {
+  error.value = null
+
+  try {
+    const response = await axios.get<{ book: Book }>(`http://localhost:3333/books/${bookId}`)
+    return response.data
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
+export async function updateBook(bookId: number, payload: Partial<Book>): Promise<{ book: Book }> {
+  try {
+    const res = await axios.put<{ book: Book }>(`http://localhost:3333/books/${bookId}`, payload)
+
+    return res.data
+  } catch (err) {
+    console.error('Failed to load books:', err)
+    throw err
+  }
+}
+
+export async function createBook(input: BookCreation) {
   const token = localStorage.getItem('authToken')
 
+  const payload = {
+    title: input.title,
+    category_id: input.categoryId,
+    writer_id: input.writerId,
+    number_of_pages: input.numberOfPages,
+    pdf_link: input.pdfLink,
+    abstract: input.abstract,
+    editor: input.editor,
+    image_path: input.imagePath,
+    edition_year:
+      input.editionYear instanceof Date ? input.editionYear.getFullYear() : input.editionYear,
+  }
+
   const res = await axios.post('http://localhost:3333/books', payload, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { Authorization: `Bearer ${token}` },
   })
 
   return res.data

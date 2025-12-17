@@ -19,3 +19,15 @@ export interface Book {
   writer: Writer
   category: Category
 }
+
+export interface BookCreation {
+  title: string
+  categoryId: number
+  writerId: number
+  numberOfPages: number
+  pdfLink: string
+  abstract: string
+  editor: string
+  imagePath: string
+  editionYear: Date
+}
