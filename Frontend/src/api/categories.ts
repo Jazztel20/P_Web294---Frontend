@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export interface Category {
   id: number
-  name: string
+  label: string
 }
 
 export async function getCategories(): Promise<Category[]> {
