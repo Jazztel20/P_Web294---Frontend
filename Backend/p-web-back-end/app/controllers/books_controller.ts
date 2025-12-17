@@ -1,6 +1,7 @@
 import Book from '#models/book'
 import Comment from '#models/comment'
 import Evaluate from '#models/evaluate'
+import user from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class BooksController {
@@ -71,7 +72,7 @@ export default class BooksController {
     return response.ok(books)
   }
   async store({ request, auth, response }: HttpContext) {
-    //const user = auth.user!
+    const user = auth.user!
     const data = request.only([
       'title',
       'number_of_pages',
@@ -85,7 +86,7 @@ export default class BooksController {
     ])
     const book = await Book.create({
       ...data,
-      //userId: user.id,
+      userId: user.id,
     })
 
     return response.created(book)
