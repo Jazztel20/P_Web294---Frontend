@@ -17,7 +17,16 @@ export default class WritersController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request, response }: HttpContext) {
+    const data = request.only(['firstname', 'lastname'])
+
+    if (!data.firstname || !data.lastname) {
+      return response.badRequest({ message: 'firstname et lastname sont requis' })
+    }
+
+    const writer = await Writer.create(data)
+    return response.created(writer)
+  }
 
   /**
    * Show individual record
@@ -29,15 +38,15 @@ export default class WritersController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({}: HttpContext) {}
 
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({}: HttpContext) {}
 
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  async destroy({}: HttpContext) {}
 }
