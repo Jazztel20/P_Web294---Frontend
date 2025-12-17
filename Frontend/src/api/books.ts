@@ -19,7 +19,7 @@ export interface Book {
   user_id?: number
 
   // relations possibles (si preload côté backend)
-  writer?: { first_name: string; last_name: string }
+  writer?: { firstname: string; lastname: string }
   category?: { name: string }
   user?: { id: number; username: string }
 }
