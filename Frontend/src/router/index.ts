@@ -29,7 +29,7 @@ const router = createRouter({
       component: () => import('../views/categoriesView.vue'),
     },
     {
-      path: '/books/:id/editBook',
+      path: '/books/edit/:id',
       name: 'edit',
       component: () => import('../views/EditBook.vue'),
     },
