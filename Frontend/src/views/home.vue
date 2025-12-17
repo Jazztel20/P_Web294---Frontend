@@ -4,20 +4,20 @@
 // ---------------------------------------------------
 import BookCard from '@/components/bookcard/BookCard.vue'
 import { ref, onMounted } from 'vue'
-import { homePageAPI} from '@/api/books'
+import { homePageAPI } from '@/api/books'
 import type { Book } from '@/api/books'
 
 const books = ref<Book[]>([])
 
 onMounted(async () => {
-  books.value = await homePageAPI()  // récupère les livres via l'API
+  books.value = await homePageAPI() // récupère les livres via l'API
 })
 </script>
 
 <template>
   <div class="page-body">
     <div class="page-wrapper">
-      <!-- ---------------------------------------
+      <!-- -------------------------------------
            INTRO TEXT
       ---------------------------------------- -->
       <section class="intro">
@@ -38,13 +38,7 @@ onMounted(async () => {
         <h2 class="section-title">Livres</h2>
 
         <div class="book-cards">
-          <!-- Replaces all your old hardcoded cards -->
-          <BookCard
-            v-for="book in books"
-            :key="book.id"
-            :book="book"
-            :showActions="false"
-          />
+          <BookCard v-for="book in books" :key="book.id" :book="book" :showActions="false" />
         </div>
       </section>
     </div>

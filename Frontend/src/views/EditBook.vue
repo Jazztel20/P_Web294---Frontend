@@ -1,123 +1,138 @@
-<script lang="ts">
-import type { Book } from '@/api/books';
-import type { Writer } from '@/models/Writer'
-import type { Category } from '@/models/Category'
-import { onMounted, ref } from 'vue';
-import { EditBook } from '@/api/books'
-import { useRoute } from 'vue-router';
+<script lang="ts" setup>
+import type { Book } from '@/models/book'
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { fetchBook, updateBook } from '@/api/books'
 
-const book = ref<Book | null>(null)
 const route = useRoute()
+const router = useRouter()
+
 const bookId = Number(route.params.id)
 
-const loading = ref(true)  // Un "ref" pour gérer l'état de chargement
-const error = ref<string | null>(null)  // Un "ref" pour stocker le message d'erreur
+const loading = ref(true)
+const saving = ref(false)
+const error = ref<string | null>(null)
+const success = ref<string | null>(null)
 
-async function updateBook(updatedBook: Partial<Book>): Promise<Book> {
-    loading.value = true
-    error.value = null
+// Livre original (optionnel, utile pour comparaison / reset)
+const book = ref<Book | null>(null)
 
-    try {
-        const response = await fetch(`http://localhost:3333/books/${bookId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedBook)  // données à mettre à jour
-        })
+// État du formulaire (copie modifiable)
+const form = reactive<Book>({
+  id: bookId,
+  title: '',
+  numberOfPages: 0,
+  pdfLink: '',
+  abstract: '',
+  editor: '',
+  editionYear: '',
+  category: { name: '' } as any,
+  writer: { name: '' } as any,
+} as Book)
 
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP: ${response.status}`)
-        }
+function hydrateForm(b: Book) {
+  // évite les crashs si certains sous-objets sont absents
+  const safe = {
+    ...b,
+    category: b.category ?? { name: '' },
+    writer: b.writer ?? { name: '' },
+  }
 
-        const data = await response.json()
-
-        const bookWithDefaults: Book = {
-          id: data.id ?? '',
-          title: data.title ?? 'Titre non disponible',
-          numberOfPages: data.numberOfPages ?? 0,
-          pdfLink: data.pdfLink ?? '',
-          abstract: data.abstract ?? 'Résumé non disponible',
-          editor: data.editor ?? 'Éditeur inconnu',
-          editionYear: data.editionYear ?? 0,
-          imagePath: data.imagePath ?? '/default-cover.jpg',
-          comment: data.comment ?? '',
-          categoryId: data.categoryId ?? 0,
-          writerId: data.writerId ?? 0,
-          userId: data.userId ?? 0,
-          global_rating: data.global_rating ?? 0,
-          total_comments: data.total_comments ?? 0,
-          writer: {
-              id: data.writer?.id ?? 0,
-              firstname: data.writer?.firstname ?? 'Prénom inconnu',
-              lastname: data.writer?.lastname ?? 'Nom inconnu',
-              createdAt: data.writer?.createdAt,
-              updatedAt: data.writer?.updatedAt
-          },
-          category: {
-              id: data.category?.id ?? 0,
-              label: data.category?.label ?? 'Catégorie inconnue',
-              createdAt: data.category?.createdAt,
-              updatedAt: data.category?.updatedAt
-          }
-        }
-
-
-
-
-        // Mettre à jour la ref pour le template
-        book.value = bookWithDefaults
-
-        return bookWithDefaults
-
-    } catch (err: any) {
-        err.value = err.message || 'Erreur inconnue'
-        console.error(err)
-        throw err
-    } finally {
-        loading.value = false
-    }
+  // copie dans reactive(form)
+  Object.assign(form, safe)
 }
 
-onMounted(async () => {
-  book.value = await EditBook(bookId) 
-})
+async function loadBook() {
+  loading.value = true
+  error.value = null
+  success.value = null
 
+  try {
+    const data = await fetchBook(bookId)
+    book.value = data
+    hydrateForm(data)
+  } catch (e: any) {
+    error.value = e?.message ?? 'Failed to load book'
+  } finally {
+    loading.value = false
+  }
+}
+
+async function onSubmit() {
+  if (!bookId || Number.isNaN(bookId)) {
+    error.value = "ID de livre invalide dans l'URL"
+    return
+  }
+
+  saving.value = true
+  error.value = null
+  success.value = null
+
+  try {
+    // Payload : ici je renvoie l'objet form complet.
+    // Si ton API attend seulement certains champs, construis un payload minimal.
+    const updated = await updateBook(bookId, form)
+
+    book.value = updated
+    hydrateForm(updated)
+
+    success.value = 'Livre mis à jour.'
+    // optionnel : rediriger après succès
+    // router.push({ name: 'book', params: { id: bookId } })
+  } catch (e: any) {
+    error.value = e?.message ?? 'Failed to update book'
+  } finally {
+    saving.value = false
+  }
+}
+
+onMounted(loadBook)
 </script>
+
 <template>
-  <div class="grid-parent">
-    <div class="grid-child">
-      <form action="POST">
-        
-        <label for="titre">Titre</label><br />
-        <input type="text" id="titre" name="titre" placeholder="{{ book.title }}"/><br />
+  <div v-if="loading">Chargement...</div>
+  <div v-else>
+    <p v-if="error" style="color: red">{{ error }}</p>
+    <p v-if="success" style="color: green">{{ success }}</p>
 
-        <label for="categorie">Catégorie</label><br />
-        <input type="text" id="categorie" name="categorie" placeholder="{{ book.categories }}"/><br />
+    <div class="grid-parent">
+      <div class="grid-child">
+        <form @submit.prevent="onSubmit">
+          <label for="titre">Titre</label><br />
+          <input type="text" id="titre" v-model="form.title" />
 
-        <label for="pages">Nombre de pages</label><br />
-        <input type="number" id="pages" name="pages" placeholder="{{ book.numberOfPages }}"/><br />
+          <label for="categorie">Catégorie</label><br />
+          <input type="text" id="categorie" v-model="form.category.name" />
 
-        <label for="extrait">Extrait</label><br />
-        <input type="text" id="extrait" name="extrait" placeholder="{{ book.pdfLink }}"/><br />
+          <label for="pages">Nombre de pages</label><br />
+          <input type="number" id="pages" v-model.number="form.numberOfPages" />
 
-        <label for="resume">Résumé</label><br />
-        <textarea id="resume" name="resume" placeholder="{{ book.abstract }}"></textarea><br />
+          <label for="extrait">Extrait</label><br />
+          <input type="text" id="extrait" v-model="form.pdfLink" />
 
-        <label for="auteur">Auteur</label><br />
-        <input type="text" id="auteur" name="auteur" placeholder="{{ book.title }}"/><br />
+          <label for="resume">Résumé</label><br />
+          <textarea id="resume" v-model="form.abstract"></textarea>
 
-        <label for="editeur">Éditeur</label><br />
-        <input type="text" id="editeur" name="editeur" placeholder="{{ book.editor }}"/><br />
+          <label for="auteur">Auteur</label><br />
+          <input type="text" id="auteur" v-model="form.writer.name" />
 
-        <label for="date_publication">Date de publication</label><br />
-        <input type="date" id="date_publication" name="date_publication" placeholder="{{ book.editionYear }}"/>
+          <label for="editeur">Éditeur</label><br />
+          <input type="text" id="editeur" v-model="form.editor" />
 
-        <input type="submit" value="Submit">
-    </form>
+          <label for="date_publication">Date de publication</label><br />
+          <input type="date" id="date_publication" v-model="form.editionYear" />
+
+          <button type="submit" :disabled="saving">
+            {{ saving ? 'Enregistrement...' : 'Submit' }}
+          </button>
+
+          <button type="button" @click="loadBook" :disabled="saving">Réinitialiser</button>
+
+          <button type="button" @click="router.back()" :disabled="saving">Retour</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
-<style scoped="">
 
-</style>
+<style scoped></style>
