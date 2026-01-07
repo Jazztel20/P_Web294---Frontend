@@ -40,6 +40,28 @@ export async function fetchBook(bookId: number): Promise<{ book: Book }> {
   }
 }
 
+export async function addBook(
+  bookId: number,
+  payload: Partial<Book>,
+  purpose: string,
+): Promise<{ book: Book }> {
+  try {
+    // Add the purpose to the payload before sending it
+    const updatedPayload = {
+      ...payload,
+      purpose, // This will add the purpose field to the payload
+    }
+
+    // Use POST instead of PUT for adding a new book
+    const res = await axios.post<{ book: Book }>(`http://localhost:3333/books`, updatedPayload)
+
+    return res.data
+  } catch (err) {
+    console.error('Failed to add book:', err)
+    throw err
+  }
+}
+
 export async function updateBook(bookId: number, payload: Partial<Book>): Promise<{ book: Book }> {
   try {
     const res = await axios.put<{ book: Book }>(`http://localhost:3333/books/${bookId}`, payload)

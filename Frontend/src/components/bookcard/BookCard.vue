@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import type { Book } from '@/api/books'
 import { booksRatingAvg } from '@/api/books'
 
-const props = defineProps<{ book: Book, showActions?: boolean }>()
+const props = defineProps<{ book: Book; showActions?: boolean }>()
 
 const averageRating = ref(0)
 
@@ -19,24 +19,27 @@ onMounted(async () => {
 })
 </script>
 
-
 <template>
   <div class="book-card">
     <!-- ✅ Optional Action buttons -->
     <div v-if="showActions" class="card-actions">
-      <router-link :to="`/book/${book.id}/editBook`" title="Modifier" class="action-btn">
+      <router-link :to="`/books/${book.id}/edit`" title="Modifier" class="action-btn">
         ⚙️
       </router-link>
 
-      <router-link :to="`/books/${book.id}/deletebook`" title="Supprimer" class="action-btn delete">
+      <router-link :to="`/books/${book.id}/delete`" title="Supprimer" class="action-btn delete">
         🗑️
       </router-link>
     </div>
 
     <!-- Image -->
 
-
-    <img src="https://www.fleuruseditions.com/media/catalog/product/cache/36e9c0117567386e14298332eb00cf61/9/7/9782215159254.jpg" alt="Couverture" class="fotorama__img" aria-hidden="false">
+    <img
+      src="https://www.fleuruseditions.com/media/catalog/product/cache/36e9c0117567386e14298332eb00cf61/9/7/9782215159254.jpg"
+      alt="Couverture"
+      class="fotorama__img"
+      aria-hidden="false"
+    />
 
     <!-- Title -->
     <h2>{{ book.title }}</h2>
@@ -48,10 +51,10 @@ onMounted(async () => {
     </div>
 
     <!-- Button -->
-      <router-link :to="`/books/${book.id}`" class="view-btn">
-        <span class="text">Voir l'évaluation</span>
-        <span class="arrow">➜</span>
-      </router-link>
+    <router-link :to="`/books/${book.id}`" class="view-btn">
+      <span class="text">Voir l'évaluation</span>
+      <span class="arrow">➜</span>
+    </router-link>
   </div>
 </template>
 
@@ -130,13 +133,13 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   justify-content: center; /* centrer le contenu */
-  position: relative;      /* pour positionner le texte absolu */
-  min-width: 150px;        /* largeur fixe du bouton */
+  position: relative; /* pour positionner le texte absolu */
+  min-width: 150px; /* largeur fixe du bouton */
   overflow: hidden;
 }
 
 .view-btn:hover {
-  background: #e0e7ff; 
+  background: #e0e7ff;
 }
 
 /* Texte disparaît, mais bouton reste même largeur */
@@ -159,7 +162,4 @@ onMounted(async () => {
 .view-btn:hover .arrow {
   transform: scale(1.3);
 }
-
-
-
 </style>

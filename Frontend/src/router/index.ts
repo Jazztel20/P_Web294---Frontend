@@ -29,7 +29,12 @@ const router = createRouter({
       component: () => import('../views/categoriesView.vue'),
     },
     {
-      path: '/books/edit/:id',
+      path: '/books/add',
+      name: 'Add Book',
+      component: () => import('../views/AddBook.vue'),
+    },
+    {
+      path: '/books/:id/edit',
       name: 'edit',
       component: () => import('../views/UpdateBook.vue'),
     },
