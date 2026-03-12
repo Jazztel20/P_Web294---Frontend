@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.string('title')
       table.specificType('number_of_pages', 'smallint')
       table.string('pdf_link')
+      table.string('epub_path').nullable()
       table.text('abstract')
       table.string('editor')
       table.specificType('edition_year', 'smallint')

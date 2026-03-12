@@ -13,28 +13,30 @@ export default class Book extends BaseModel {
   @column()
   declare title: string
 
-  //number = Small Int
   @column()
   declare numberOfPages: number
 
   @column()
   declare pdfLink: string
 
-  //résumé du livre
+  // Utilise epubPath (camelCase) pour le code, 
+  // Lucid fera le lien avec la colonne epub_path en SQL automatiquement
+  @column()
+  declare epubPath: string
+  
   @column() 
   declare abstract: string
 
   @column() 
   declare editor: string
 
-  //number = Small Int
   @column() 
   declare editionYear: number
 
   @column() 
   declare imagePath: string
 
-  //Récupération des 3 clefs étrangères 
+  // Clefs étrangères
   @column()
   declare categoryId: number | null
 
@@ -44,18 +46,19 @@ export default class Book extends BaseModel {
   @column()
   declare userId: number | null
 
-  //Assignation des clefs étrangères à book
-  @belongsTo(()=> Category)
+  // Relations
+  @belongsTo(() => Category)
   declare category: BelongsTo<typeof Category>
 
-  @belongsTo(()=> Writer)
+  @belongsTo(() => Writer)
   declare writer: BelongsTo<typeof Writer>
 
-  @belongsTo(()=> User)
+  @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
-  @hasMany(()=> Comment)
-  declare comment: HasMany<typeof Comment>
+  // Mis au pluriel pour la clarté
+  @hasMany(() => Comment)
+  declare comments: HasMany<typeof Comment>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
